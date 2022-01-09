@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Windows.h>
+#include <optional>
 
 HWND GetFocusedWindow()
 {
@@ -27,46 +28,33 @@ void ToggleFocusedWindowTopmost()
     }
 }
 
-void OnKeyDown(unsigned long keyCode)
+void OnShortcutPressed(int shortcutId)
 {
-    std::cout << keyCode << " keydown\n";
+    std::cout << shortcutId << " pressed\n";
+    ToggleFocusedWindowTopmost();
 }
 
-void OnKeyUp(unsigned long keyCode)
+bool RegisterShortcut(int shortcutId, unsigned modifiers, unsigned keyCode)
 {
-    std::cout << keyCode << " keyup\n";
+    return RegisterHotKey(NULL, shortcutId, modifiers | MOD_NOREPEAT, keyCode);
 }
 
-LRESULT CALLBACK CheckShortcut(int iCode, WPARAM wParam, LPARAM lParam)
+void ListenToWindowsEvents()
 {
-    PKBDLLHOOKSTRUCT pHook = (PKBDLLHOOKSTRUCT)lParam;
-    DWORD keyCode = pHook->vkCode;
-
-    if (wParam == WM_KEYDOWN)
-        OnKeyDown(keyCode);
-    else if (wParam == WM_KEYUP)
-        OnKeyUp(keyCode);
-
-    return CallNextHookEx(NULL, iCode, wParam, lParam);
-}
-
-void StartKeyHook()
-{
-    HHOOK keyHook = SetWindowsHookEx(WH_KEYBOARD_LL, CheckShortcut, NULL, NULL);
     MSG msg = { 0 };
-
     while (GetMessage(&msg, NULL, 0, 0))
     {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-
-    UnhookWindowsHookEx(keyHook);
+        if (msg.message == WM_HOTKEY)
+        {
+            OnShortcutPressed((int)msg.wParam);
+        }
+    } 
 }
 
 int main(int argc, char* argv[])
 {
     // ToggleFocusedWindowTopmost();
-    StartKeyHook();
+    RegisterShortcut(-123, MOD_ALT, 0x50);
     std::cout << "Starting keyboard hook\n";
+    ListenToWindowsEvents();
 }
