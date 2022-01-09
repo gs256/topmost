@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <optional>
+#include "keyhook.hpp"
 
 HWND GetFocusedWindow()
 {
@@ -28,33 +29,16 @@ void ToggleFocusedWindowTopmost()
     }
 }
 
-void OnShortcutPressed(int shortcutId)
+void Callback()
 {
-    std::cout << shortcutId << " pressed\n";
+    std::cout << "shortcut pressed\n";
     ToggleFocusedWindowTopmost();
-}
-
-bool RegisterShortcut(int shortcutId, unsigned modifiers, unsigned keyCode)
-{
-    return RegisterHotKey(NULL, shortcutId, modifiers | MOD_NOREPEAT, keyCode);
-}
-
-void ListenToWindowsEvents()
-{
-    MSG msg = { 0 };
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-        if (msg.message == WM_HOTKEY)
-        {
-            OnShortcutPressed((int)msg.wParam);
-        }
-    } 
 }
 
 int main(int argc, char* argv[])
 {
-    // ToggleFocusedWindowTopmost();
-    RegisterShortcut(-123, MOD_ALT, 0x50);
+    KeyHook keyHook;
+    keyHook.RegisterShortcut(MOD_ALT, 0x50, Callback);
     std::cout << "Starting keyboard hook\n";
-    ListenToWindowsEvents();
+    keyHook.Listen();
 }
