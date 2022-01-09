@@ -1,7 +1,4 @@
-#include <iostream>
-#include <Windows.h>
-#include <optional>
-#include "keyhook.hpp"
+#include "core.hpp"
 
 HWND GetFocusedWindow()
 {
@@ -17,7 +14,7 @@ bool TryGetWindowTopmostStatus(HWND windowHandle, bool& outIsTopmost)
     return true;
 }
 
-void ToggleFocusedWindowTopmost()
+void Core::ToggleFocusedWindowTopmost()
 {
     HWND focusedWindow = GetFocusedWindow();
     bool isTopmost;
@@ -29,16 +26,13 @@ void ToggleFocusedWindowTopmost()
     }
 }
 
-void Callback()
+bool Core::IsFocusedWindowTopmost()
 {
-    std::cout << "shortcut pressed\n";
-    ToggleFocusedWindowTopmost();
-}
+    HWND focusedWindow = GetFocusedWindow();
+    bool isTopmost;
 
-int main(int argc, char* argv[])
-{
-    KeyHook keyHook;
-    keyHook.RegisterShortcut(MOD_ALT, 0x50, Callback);
-    std::cout << "Starting keyboard hook\n";
-    keyHook.Listen();
+    if (!TryGetWindowTopmostStatus(focusedWindow, isTopmost))
+        return false;
+    
+    return isTopmost;
 }

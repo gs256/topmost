@@ -3,12 +3,6 @@
 #include <functional>
 #include <vector>
 
-struct Shortcut 
-{
-    int Id;
-    std::function<void()> Callback;
-};
-
 class KeyHook
 {
 public:
@@ -17,6 +11,12 @@ public:
     void Listen();
 
 private:
+    struct Shortcut 
+    {
+        int Id;
+        std::function<void()> Callback;
+    };
+
     int availableShortcutId;
     std::vector<Shortcut> shortcuts;
 
