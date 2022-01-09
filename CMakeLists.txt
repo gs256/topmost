@@ -4,7 +4,8 @@ add_definitions(-DNOUNICODE)
 
 add_executable(
     topmost 
-    src/main.cpp 
+    WIN32
+    src/winmain.cpp 
     src/keyhook.cpp
     src/core.cpp
 )
