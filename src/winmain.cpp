@@ -33,8 +33,8 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
         return 1;
 
     KeyHook keyHook;
-    keyHook.RegisterShortcut(MOD_ALT, 0x50, ToggleTopmost);
-    keyHook.RegisterShortcut(MOD_ALT | MOD_CONTROL, 0x50, Exit);
+    keyHook.RegisterShortcut(Config::ToggleShortcut, ToggleTopmost);
+    keyHook.RegisterShortcut(Config::ExitShortcut, Exit);
     keyHook.Listen();
 
     return 0;

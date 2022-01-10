@@ -3,22 +3,28 @@
 #include <functional>
 #include <vector>
 
+struct Shortcut
+{
+    unsigned modifiers;
+    unsigned keyCode;
+};
+
 class KeyHook
 {
 public:
     KeyHook();
-    bool RegisterShortcut(unsigned modifiers, unsigned keyCode, std::function<void()> callback);
+    bool RegisterShortcut(Shortcut shortcut, std::function<void()> callback);
     void Listen();
 
 private:
-    struct Shortcut 
+    struct RegisteredShortcut 
     {
         int Id;
         std::function<void()> Callback;
     };
 
     int availableShortcutId;
-    std::vector<Shortcut> shortcuts;
+    std::vector<RegisteredShortcut> shortcuts;
 
     int GetShortcutId();
     void OnShortcutPressed(int shortcutId);

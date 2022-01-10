@@ -6,10 +6,10 @@ KeyHook::KeyHook()
     : availableShortcutId(1),
       shortcuts() { }
 
-bool KeyHook::RegisterShortcut(unsigned modifiers, unsigned keyCode, std::function<void()> callback)
+bool KeyHook::RegisterShortcut(Shortcut shortcut, std::function<void()> callback)
 {
     int shortcutId = GetShortcutId();
-    bool registered = RegisterHotKey(NULL, shortcutId, modifiers | MOD_NOREPEAT, keyCode);
+    bool registered = RegisterHotKey(NULL, shortcutId, shortcut.modifiers | MOD_NOREPEAT, shortcut.keyCode);
 
     if (!registered)
         return false;
