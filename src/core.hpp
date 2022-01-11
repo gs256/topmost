@@ -5,4 +5,6 @@ namespace Core
 {
     bool IsFocusedWindowTopmost();
     void ToggleFocusedWindowTopmost();
+    void MakeFocusedWindowTopmost();
+    void MakeFocusedWindowNotopmost();
 }

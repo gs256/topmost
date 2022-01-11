@@ -16,13 +16,13 @@ bool TryGetWindowTopmostStatus(HWND windowHandle, bool& outIsTopmost)
 
 void Core::ToggleFocusedWindowTopmost()
 {
-    HWND focusedWindow = GetFocusedWindow();
-    bool isTopmost;
-
-    if (TryGetWindowTopmostStatus(focusedWindow, isTopmost))
+    if (IsFocusedWindowTopmost())
     {
-        HWND zFlag = isTopmost ? HWND_NOTOPMOST : HWND_TOPMOST;
-        SetWindowPos(focusedWindow, zFlag, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+        MakeFocusedWindowNotopmost();
+    }
+    else
+    {
+        MakeFocusedWindowTopmost();
     }
 }
 
@@ -35,4 +35,14 @@ bool Core::IsFocusedWindowTopmost()
         return false;
     
     return isTopmost;
+}
+
+void Core::MakeFocusedWindowTopmost()
+{
+    SetWindowPos(GetFocusedWindow(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+}
+
+void Core::MakeFocusedWindowNotopmost()
+{
+    SetWindowPos(GetFocusedWindow(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }

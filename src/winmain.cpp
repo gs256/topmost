@@ -4,11 +4,6 @@
 #include "core.hpp"
 #include "config.hpp"
 
-void ToggleTopmost()
-{
-    Core::ToggleFocusedWindowTopmost();
-}
-
 void Exit()
 {
     std::exit(0);
@@ -33,7 +28,9 @@ int WINAPI wWinMain(HINSTANCE, HINSTANCE, PWSTR, int)
         return 1;
 
     KeyHook keyHook;
-    keyHook.RegisterShortcut(Config::ToggleShortcut, ToggleTopmost);
+    keyHook.RegisterShortcut(Config::ToggleShortcut, Core::ToggleFocusedWindowTopmost);
+    keyHook.RegisterShortcut(Config::MakeTopmostShortcut, Core::MakeFocusedWindowTopmost);
+    keyHook.RegisterShortcut(Config::MakeNotopmostShortcut, Core::MakeFocusedWindowNotopmost);
     keyHook.RegisterShortcut(Config::ExitShortcut, Exit);
     keyHook.Listen();
 
